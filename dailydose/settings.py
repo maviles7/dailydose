@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'dailydose.wsgi.application'
 DATABASES = {
     'default': {
       'ENGINE': 'django.db.backends.postgresql',
-      'NAME': 'chris',
+      'NAME': 'dailydose',
       'USER': os.environ['DB_USER'],
       'PASSWORD': os.environ['DB_PW'],
       'HOST': os.environ['DB_HOST'],

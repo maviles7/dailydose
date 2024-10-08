@@ -16,7 +16,7 @@
       <nav>
         <ul>
           {% if user.is_authenticated %}
-            <li><a href="">Daily Doses</a></li>
+            <li><a href="{% url 'dose-index' %}">Daily Doses</a></li>
             <li><a href="">Favorite Doses</a></li>
             <li><a href="">Bookmarked Doses</a></li>
             <li><a href="">Upload A Dose</a></li>

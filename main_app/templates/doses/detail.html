@@ -35,6 +35,14 @@
             {% csrf_token %}
             <button type="submit">Remove Bookmark</button>
           </form>
+          <form action="{% url 'favorite-dose' dose.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Favorite this dose</button>
+          </form>
+          <form action="{% url 'unfavorite-dose' dose.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Remove Favorite</button>
+          </form>
         </li>
     </ul>
   </div>

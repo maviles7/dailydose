@@ -121,6 +121,36 @@ def unbookmark_dose(request, dose_id):
     return redirect('bookmark-dose-index')
 
 
+# @login_required
+def favorite_dose(request, dose_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+    except Dose.DoesNotExist:
+        return redirect('favorite-doses-index')  # Redirect if the dose does not exist
+
+    user = request.user
+
+    if not FavoriteDose.objects.filter(dose=dose, user=user).exists():
+        FavoriteDose.objects.create(dose=dose, user=user)
+    
+    return redirect('favorite-doses-index')
+
+
+# @login_required
+def unfavorite_dose(request, dose_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+    except Dose.DoesNotExist:
+        return redirect('favorite-doses-index')  # Redirect if the dose does not exist
+
+    user = request.user
+
+    favorite = FavoriteDose.objects.filter(dose=dose, user=user).first()
+    if favorite:
+        favorite.delete()
+
+    return redirect('favorite-doses-index')
+
 # refactor to class based view --> create a model, create a form, create a view, create template, map URL
 def upload(request):
     return render(request, "main_app/upload_form.html")

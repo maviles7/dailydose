@@ -65,15 +65,13 @@ def dose_list (request):
 def favorite_doses_list(request):
     user = request.user
     favorite_doses = FavoriteDose.objects.filter(user=user).select_related('dose')
-    return render(request, 'doses/favorite_doses.html', {'favorite_doses': favorite_doses})
-
-def fav_dose_list(request):
-    return render(request, 'doses/fav_index.html')
-
-def bookmark_dose_list(request):
-    return render(request, 'doses/bookmark_index.html')
+    return render(request, 'doses/favorite_doses_list.html', {'favorite_doses': favorite_doses})
 
 
-# refactory to class based view --> create a model, create a form, create a view, create template, map URL 
+def bookmark_doses_list(request):
+    return render(request, 'doses/bookmark_doses_list.html')
+
+
+# refactor to class based view --> create a model, create a form, create a view, create template, map URL 
 def upload(request):
     return render(request, 'main_app/upload_form.html')

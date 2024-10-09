@@ -1,0 +1,35 @@
+nav {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    text-align: center;
+    height: 100%;
+    overflow: auto;
+}
+
+main {
+    margin-left: 200px;
+    padding: 1px 16px;
+    height: 1000px;
+}
+
+ul {
+    list-style: none;
+}
+
+li {
+    text-decoration: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+h1 {
+    text-align: center;
+}

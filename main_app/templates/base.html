@@ -17,9 +17,9 @@
         <ul>
           {% if user.is_authenticated %}
             <li><a href="{% url 'dose-index' %}">Daily Doses</a></li>
-            <li><a href="">Favorite Doses</a></li>
-            <li><a href="">Bookmarked Doses</a></li>
-            <li><a href="">Upload A Dose</a></li>
+            <li><a href="{% url 'fav-dose-index' %}">Favorite Doses</a></li>
+            <li><a href="{% url 'bookmark-dose-index' %}">Bookmarked Doses</a></li>
+            <li><a href="{% url 'upload' %}">Upload A Dose</a></li>
             <li>
               <form id="logout-form" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}

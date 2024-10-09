@@ -1,6 +1,6 @@
 import requests
 import os
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
@@ -83,8 +83,42 @@ def favorite_doses_list(request):
     )
 
 
+# @login_required
 def bookmark_doses_list(request):
-    return render(request, "doses/bookmark_doses_list.html")
+    user = request.user
+    bookmarked_doses = BookmarkDose.objects.filter(user=user).select_related("dose")
+    return render(request, "doses/bookmark_doses_list.html", {"bookmarked_doses": bookmarked_doses})
+
+
+# @login_required
+def bookmark_dose(request, dose_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+    except Dose.DoesNotExist:
+        return redirect('bookmark-dose-index')  # Redirect if the dose does not exist
+
+    user = request.user
+
+    if not BookmarkDose.objects.filter(dose=dose, user=user).exists():
+        BookmarkDose.objects.create(dose=dose, user=user)
+
+    return redirect('bookmark-dose-index')
+
+
+# @login_required
+def unbookmark_dose(request, dose_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+    except Dose.DoesNotExist:
+        return redirect('bookmark-dose-index')  # Redirect if the dose does not exist
+
+    user = request.user
+
+    bookmark = BookmarkDose.objects.filter(dose=dose, user=user).first()
+    if bookmark:
+        bookmark.delete()
+
+    return redirect('bookmark-dose-index')
 
 
 # refactor to class based view --> create a model, create a form, create a view, create template, map URL

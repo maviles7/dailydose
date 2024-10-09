@@ -27,6 +27,14 @@
           {% if dose.url %}
             <a href="{{ dose.url }}">Read more</a>
           {% endif %}
+          <form action="{% url 'bookmark-dose' dose.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Bookmark this dose</button>
+          </form>
+          <form action="{% url 'unbookmark-dose' dose.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Remove Bookmark</button>
+          </form>
         </li>
     </ul>
   </div>

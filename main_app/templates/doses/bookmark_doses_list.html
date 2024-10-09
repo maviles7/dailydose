@@ -1,16 +1,12 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block content %}
   <h1>Bookmarked Doses</h1>
-  {% comment %} <ul>
-    {% for dose in doses %}
+  <ul>
+    {% for bookmark in bookmarked_doses %}
       <li>
-        <h2>{{ dose.title }}</h2>
-        <p><strong>Source:</strong> {{ dose.source.name }}</p>
-        <p><strong>Published At:</strong> {{ dose.published_at }}</p>
-        <p>{{ dose.description }}</p>
-        <a href="{{ dose.url }}">Read more</a>
+        <a href="{% url 'dose-detail' bookmark.dose.id %}"><h1>{{ bookmark.dose.title }}</h1></a>
       </li>
     {% endfor %}
-  </ul> {% endcomment %}
+  </ul>
 {% endblock %}

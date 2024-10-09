@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>Favorite Doses</h1>
+  <ul>
+    {% for favorite in favorite_doses %}
+      <li>
+        <a href="{% url 'dose_detail' favorite.dose.id %}">{{ favorite.dose.title }}</a>
+        <p>{{ favorite.dose.description }}</p>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

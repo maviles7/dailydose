@@ -3,7 +3,8 @@ import os
 from django.shortcuts import render
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth.views import LoginView
-from .models import NewsSource, Dose
+from django.contrib.auth.decorators import login_required
+from .models import NewsSource, Dose, FavoriteDose, BookmarkDose
 
 BASE_URL = 'https://api.thenewsapi.com/v1/news/top?'
 
@@ -58,3 +59,9 @@ def dose_list (request):
     doses = Dose.objects.all()[:3]
     print(doses)
     return render(request, 'doses/index.html', {'doses': doses})
+
+# @login_required 
+def favorite_doses_list(request):
+    user = request.user
+    favorite_doses = FavoriteDose.objects.filter(user=user).select_related('dose')
+    return render(request, 'doses/favorite_doses.html', {'favorite_doses': favorite_doses})

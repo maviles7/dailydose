@@ -46,4 +46,19 @@
         </li>
     </ul>
   </div>
+  <div class='comment-container'>
+    <h2>Comments</h2>
+    <ul>
+      {% for comment in comments %}
+        <li>{{ comment.user }}: {{ comment.text }} ({{ comment.created_at }})</li>
+      {% endfor %}
+    </ul>
+  
+    <h2>Add a Comment</h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Submit</button>
+    </form>
+  </div>
 {% endblock %}

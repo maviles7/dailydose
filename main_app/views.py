@@ -4,7 +4,8 @@ from django.shortcuts import render, redirect
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-from .models import NewsSource, Dose, FavoriteDose, BookmarkDose
+from .models import NewsSource, Dose, FavoriteDose, BookmarkDose, Comment
+from .forms import CommentForm
 
 BASE_URL = "https://api.thenewsapi.com/v1/news/top?"
 
@@ -69,9 +70,31 @@ def dose_list(request):
 
 
 def dose_detail(request, dose_id):
-    dose = Dose.objects.get(id=dose_id)
-    print(dose)
-    return render(request, "doses/detail.html", {"dose": dose})
+    try:
+        dose = Dose.objects.get(id=dose_id)
+    except Dose.DoesNotExist:
+        return redirect('dose-detail')  # Redirect if the dose does not exist
+
+    comments = dose.comments.all()
+    form = CommentForm()
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')  # Redirect to login if the user is not authenticated
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.dose = dose
+            comment.user = request.user
+            comment.save()
+            # Redirect to the same page to display the new comment
+            return redirect('dose-detail', dose_id=dose.id)
+
+    return render(request, 'doses/detail.html', {
+        'dose': dose,
+        'comments': comments,
+        'form': form,
+    })
 
 
 # @login_required
@@ -150,6 +173,30 @@ def unfavorite_dose(request, dose_id):
         favorite.delete()
 
     return redirect('favorite-doses-index')
+
+# @login_required
+def add_comment(request, dose_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+    except Dose.DoesNotExist:
+        return redirect('dose-index')  # Redirect if the dose does not exist
+
+    user = request.user
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            Comment.objects.create(dose=dose, user=user, text=text)
+            return redirect('dose-detail', dose_id=dose_id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'doses/detail.html', {
+        'dose': dose,
+        'comment_form': form
+    })
+
 
 # refactor to class based view --> create a model, create a form, create a view, create template, map URL
 def upload(request):

@@ -1,6 +1,7 @@
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class NewsSource(models.Model):
@@ -28,7 +29,10 @@ class Dose(models.Model):
 
     def __str__(self):
         return self.title
-
+    
+    def get_absolute_url(self):
+        return reverse("dose-detail", kwargs={"dose_id": self.id})
+    
 
 class FavoriteDose(models.Model):
     dose = models.ForeignKey(Dose, on_delete=models.CASCADE)
@@ -37,7 +41,7 @@ class FavoriteDose(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.dose.title}"
-    
+
 
 class BookmarkDose(models.Model):
     dose = models.ForeignKey(Dose, on_delete=models.CASCADE)

@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head %}
+  <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+  <div class="details-container">
+    <ul>
+      <li>
+          {% if dose.title %}
+            <h1>{{ dose.title }}</h1>
+          {% endif %}
+          {% if dose.author %}
+            <p>Author: {{ dose.author }}</p>
+          {% endif %}
+          {% if dose.source.name %}
+            <p>Source: {{ dose.source.name }}</p>
+          {% endif %}
+          {% if dose.published %}
+            <p>Published: {{ dose.published }}</p>
+          {% endif %}
+          {% if dose.description %}
+            <p>Description: {{ dose.description }}</p>
+          {% endif %}
+          {% if dose.url %}
+            <a href="{{ dose.url }}">Read more</a>
+          {% endif %}
+          <form action="{% url 'bookmark-dose' dose.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Bookmark this dose</button>
+          </form>
+          <form action="{% url 'unbookmark-dose' dose.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Remove Bookmark</button>
+          </form>
+          <form action="{% url 'favorite-dose' dose.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Favorite this dose</button>
+          </form>
+          <form action="{% url 'unfavorite-dose' dose.id %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Remove Favorite</button>
+          </form>
+        </li>
+    </ul>
+  </div>
+{% endblock %}

@@ -17,7 +17,7 @@
         <ul>
           {% if user.is_authenticated %}
             <li><a href="{% url 'dose-index' %}">Daily Doses</a></li>
-            <li><a href="{% url 'favorite-doses-list' %}">Favorite Doses</a></li>
+            <li><a href="{% url 'favorite-doses-index' %}">Favorite Doses</a></li>
             <li><a href="{% url 'bookmark-dose-index' %}">Bookmarked Doses</a></li>
             <li><a href="{% url 'upload' %}">Upload A Dose</a></li>
             <li>

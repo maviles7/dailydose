@@ -55,6 +55,7 @@ class BookmarkDose(models.Model):
 class Comment(models.Model):
     dose = models.ForeignKey(Dose, on_delete=models.CASCADE, related_name='comments')
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Change text field to comment field
     text = models.TextField(max_length=250)
     created_at = models.DateTimeField(auto_now_add=True)
 

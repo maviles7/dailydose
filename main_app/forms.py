@@ -7,5 +7,13 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ['text']
         widgets = {
-            'text': forms.TextInput(attrs={'placeholder': 'Enter your comment here', 'class': 'form-control'}),
+            'text': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+class EditCommentForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text']
+        widgets = {
+            'text': forms.TextInput(attrs={'class': 'form-control'}),
         }

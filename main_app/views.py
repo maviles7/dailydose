@@ -198,6 +198,19 @@ def add_comment(request, dose_id):
     })
 
 
+# @login_required
+def delete_comment(request, dose_id, comment_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+        comment = Comment.objects.get(id=comment_id, dose=dose)
+    except (Dose.DoesNotExist, Comment.DoesNotExist):
+        return redirect('dose-detail', dose_id=dose_id)  # Redirect if the dose or comment does not exist
+
+    comment.delete()
+
+    return redirect('dose-detail', dose_id=dose_id)
+
+
 # refactor to class based view --> create a model, create a form, create a view, create template, map URL
 def upload(request):
     return render(request, "main_app/upload_form.html")

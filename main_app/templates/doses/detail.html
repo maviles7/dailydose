@@ -51,6 +51,10 @@
     <ul>
       {% for comment in comments %}
         <li>{{ comment.user }}: {{ comment.text }} ({{ comment.created_at }})</li>
+        <form action="{% url 'delete-comment' dose.id comment.id %}" method="post" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit">Delete</button>
+        </form>
       {% endfor %}
     </ul>
   

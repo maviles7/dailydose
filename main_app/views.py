@@ -4,10 +4,34 @@ from django.shortcuts import render, redirect
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from django.contrib.auth import authenticate, login
+# from django.http import HttpResponseRedirect
 from .models import NewsSource, Dose, FavoriteDose, BookmarkDose, Comment
 from .forms import CommentForm, EditCommentForm
 
 BASE_URL = "https://api.thenewsapi.com/v1/news/top?"
+
+# Create your views here.
+class Home(LoginView):
+    template_name = "home.html"
+
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'registration/signup.html'
+    success_url = reverse_lazy('dose-index')  # Redirect to the index page after sign-up
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(self.request, user)
+        return response
 
 
 def fetch_doses():
@@ -55,11 +79,6 @@ def fetch_doses():
             print("Doses is not a list.")
     else:
         print(f"Error fetching doses: {response.status_code} - {response.text}")
-
-
-# Create your views here.
-class Home(LoginView):
-    template_name = "home.html"
 
 
 def dose_list(request):
@@ -238,7 +257,3 @@ def delete_comment(request, dose_id, comment_id):
 
     return redirect('dose-detail', dose_id=dose_id)
 
-
-# refactor to class based view --> create a model, create a form, create a view, create template, map URL
-def upload(request):
-    return render(request, "main_app/upload_form.html")

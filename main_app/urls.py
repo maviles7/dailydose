@@ -1,4 +1,5 @@
 from django.urls import path
+from .views import SignUpView
 from . import views
 
 urlpatterns = [
@@ -14,5 +15,5 @@ urlpatterns = [
     path('dose/<int:dose_id>/add-comment/', views.add_comment, name='add-comment'),
     path('dose/<int:dose_id>/edit-comment/<int:comment_id>/', views.edit_comment, name='edit-comment'),
     path('dose/<int:dose_id>/delete-comment/<int:comment_id>/', views.delete_comment, name='delete-comment'),
-    path('doses/upload', views.upload, name='upload'),
+    path('accounts/signup/', SignUpView.as_view(), name='signup'),
 ]

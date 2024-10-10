@@ -12,6 +12,7 @@ urlpatterns = [
     path('doses/bookmarks/<int:dose_id>/', views.bookmark_dose, name='bookmark-dose'),
     path('doses/unbookmark/<int:dose_id>/', views.unbookmark_dose, name='unbookmark-dose'),
     path('dose/<int:dose_id>/add-comment/', views.add_comment, name='add-comment'),
+    path('dose/<int:dose_id>/edit-comment/<int:comment_id>/', views.edit_comment, name='edit-comment'),
     path('dose/<int:dose_id>/delete-comment/<int:comment_id>/', views.delete_comment, name='delete-comment'),
     path('doses/upload', views.upload, name='upload'),
 ]

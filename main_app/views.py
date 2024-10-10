@@ -5,7 +5,7 @@ from django.utils.dateparse import parse_datetime
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from .models import NewsSource, Dose, FavoriteDose, BookmarkDose, Comment
-from .forms import CommentForm
+from .forms import CommentForm, EditCommentForm
 
 BASE_URL = "https://api.thenewsapi.com/v1/news/top?"
 
@@ -198,6 +198,31 @@ def add_comment(request, dose_id):
     })
 
 
+def edit_comment(request, dose_id, comment_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+        comment = Comment.objects.get(id=comment_id, dose=dose)
+    except (Dose.DoesNotExist, Comment.DoesNotExist):
+        return redirect('dose-detail', dose_id=dose_id)  # Redirect if the dose or comment does not exist
+
+    if comment.user != request.user:
+        return redirect('dose-detail', dose_id=dose_id)  # Redirect if the user is not the author
+
+    if request.method == 'POST':
+        form = EditCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('dose-detail', dose_id=dose_id)
+    else:
+        form = EditCommentForm(instance=comment)
+
+    return render(request, 'doses/edit_comment.html', {
+        'dose': dose,
+        'comment': comment,
+        'form': form
+    })
+
+
 # @login_required
 def delete_comment(request, dose_id, comment_id):
     try:
@@ -205,6 +230,9 @@ def delete_comment(request, dose_id, comment_id):
         comment = Comment.objects.get(id=comment_id, dose=dose)
     except (Dose.DoesNotExist, Comment.DoesNotExist):
         return redirect('dose-detail', dose_id=dose_id)  # Redirect if the dose or comment does not exist
+
+    if comment.user != request.user:
+        return redirect('dose-detail', dose_id=dose_id)  # Redirect if the user is not the author
 
     comment.delete()
 

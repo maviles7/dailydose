@@ -12,7 +12,6 @@ from django.contrib.auth import authenticate, login
 from .models import NewsSource, Dose, FavoriteDose, BookmarkDose, Comment
 from .forms import CommentForm, EditCommentForm
 
-BASE_URL = 'https://gnews.io/api/v4/top-headlines?max=10&country=us&expand=content&'
 
 # Create your views here.
 class Home(LoginView):
@@ -34,59 +33,66 @@ class SignUpView(CreateView):
         return response
 
 
-def fetch_doses(request):
+BASE_URL = "https://gnews.io/api/v4/top-headlines?"
+
+def fetch_doses():
     api_key = os.environ.get("API_KEY")
     if not api_key:
         print("API_KEY is not set in the environment variables.")
-        return render(request, 'error.html', {'message': 'API_KEY is not set in the environment variables.'})
+        return []
 
-    url = f'{BASE_URL}apikey={api_key}'
+    # Fetch doses with expanded content, limited to 5
+    url = f'{BASE_URL}apikey={api_key}&lang=en&expand=content'
     print(f"Request URL: {url}")  # Debugging: Print the URL
-    response = ''
-
+    
     try:
         response = requests.get(url)
         print(f"Response Status Code: {response.status_code}")  # Debugging: Print the status code
 
         if response.status_code == 200:
             data = response.json()
-            doses = data.get('articles', [])  # Adjusted to reflect the response structure
-            print('This is what the doses object looks like:', doses)
+            doses = data.get('articles', [])[:5]  # Get the first 5 articles
 
-            for dose_data in doses:
-                source_name = dose_data['source']['name']
+            # Iterate through the fetched articles and save them to the database
+            for dose in doses:
+                # Get or create the NewsSource object
+                source_name = dose['source']['name']
                 source, created = NewsSource.objects.get_or_create(name=source_name)
 
-                Dose.objects.create(
-                    title=dose_data['title'],
-                    defaults={
-                        'description': dose_data['description'],
-                        'url': dose_data['url'],
-                        'content': dose_data.get('content', ''),
-                        'image': dose_data.get('image', ''),
-                        'published_at': dose_data['publishedAt'],
-                        'source': source
-                    }
-                )
-            print("Doses fetched and saved successfully.")
+                # Parse the published_at field to match DateTimeField
+                published_at = parse_datetime(dose['publishedAt'])
+
+                # Check if the dose (dose) already exists based on the URL
+                if not Dose.objects.filter(url=dose['url']).exists():
+                    # Save the dose to the database
+                    Dose.objects.create(
+                        title=dose['title'],
+                        category=dose.get('category'),  # Assuming category is available
+                        content=dose.get('content'),
+                        description=dose['description'],
+                        url=dose['url'],
+                        image=dose.get('image'),
+                        published_at=published_at,
+                        source=source,
+                    )
+            return doses  # Optionally return the doses, though not necessary here
         else:
             print(f"Failed to fetch doses: {response.status_code}")
-            print(f"Response Content: {response.content}")  # Debugging: Print the response content
+            return []
     except Exception as e:
         print(f"Error fetching doses: {e}")
-        print(response.content)  # Debugging: Print the response content
+        return []
 
-    # Retrieve the saved doses from the database
-    saved_doses = Dose.objects.all()
-
-    # Render the template with the doses
-    return render(request, 'doses/index.html', {'doses': saved_doses})
 
 def dose_list(request):
-    fetch_doses(request)
+    # Fetch and save doses from the API
+    fetch_doses()
+
+    # Retrieve the saved doses from the database
     doses = Dose.objects.all()
-    print(doses)
-    return render(request, "doses/index.html", {"doses": doses})
+
+    # Pass the doses to the template for rendering
+    return render(request, 'doses/index.html', {'doses': doses})
 
 
 def dose_detail(request, dose_id):

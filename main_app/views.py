@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login
 from .models import NewsSource, Dose, FavoriteDose, BookmarkDose, Comment
 from .forms import CommentForm, EditCommentForm
 
-BASE_URL = 'https://gnews.io/api/v4/top-headlines?max=10&country=us&'
+BASE_URL = 'https://gnews.io/api/v4/top-headlines?max=10&country=us&expand=content&'
 
 # Create your views here.
 class Home(LoginView):
@@ -34,11 +34,11 @@ class SignUpView(CreateView):
         return response
 
 
-def fetch_doses():
+def fetch_doses(request):
     api_key = os.environ.get("API_KEY")
     if not api_key:
         print("API_KEY is not set in the environment variables.")
-        return
+        return render(request, 'error.html', {'message': 'API_KEY is not set in the environment variables.'})
 
     url = f'{BASE_URL}apikey={api_key}'
     print(f"Request URL: {url}")  # Debugging: Print the URL
@@ -57,11 +57,12 @@ def fetch_doses():
                 source_name = dose_data['source']['name']
                 source, created = NewsSource.objects.get_or_create(name=source_name)
 
-                Dose.objects.update_or_create(
+                Dose.objects.create(
                     title=dose_data['title'],
                     defaults={
                         'description': dose_data['description'],
                         'url': dose_data['url'],
+                        'content': dose_data.get('content', ''),
                         'image': dose_data.get('image', ''),
                         'published_at': dose_data['publishedAt'],
                         'source': source
@@ -75,9 +76,14 @@ def fetch_doses():
         print(f"Error fetching doses: {e}")
         print(response.content)  # Debugging: Print the response content
 
+    # Retrieve the saved doses from the database
+    doses = Dose.objects.all()
+
+    # Render the template with the doses
+    return render(request, 'doses/index.html', {'doses': doses})
 
 def dose_list(request):
-    fetch_doses()
+    fetch_doses(request)
     doses = Dose.objects.all()
     print(doses)
     return render(request, "doses/index.html", {"doses": doses})

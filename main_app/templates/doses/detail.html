@@ -25,7 +25,7 @@
             <p>{{ dose.content }}</p>
           {% endif %}
           {% if dose.url %}
-            <a href="{{ dose.url }}">Read more</a>
+            <a href="{{ dose.url }}">Source</a>
           {% endif %}
           <form action="{% url 'bookmark-dose' dose.id %}" method="post">
             {% csrf_token %}

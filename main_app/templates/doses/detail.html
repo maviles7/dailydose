@@ -12,17 +12,17 @@
           {% if dose.title %}
             <h1>{{ dose.title }}</h1>
           {% endif %}
-          {% if dose.author %}
-            <p>Author: {{ dose.author }}</p>
+          {% if dose.image %}
+            <img src="{{ dose.image }}" alt="{{ dose.title }}">
           {% endif %}
           {% if dose.source.name %}
             <p>Source: {{ dose.source.name }}</p>
           {% endif %}
-          {% if dose.published %}
-            <p>Published: {{ dose.published }}</p>
+          {% if dose.published_at %}
+            <p>Published: {{ dose.published_at }}</p>
           {% endif %}
-          {% if dose.description %}
-            <p>Description: {{ dose.description }}</p>
+          {% if dose.content %}
+            <p>{{ dose.content }}</p>
           {% endif %}
           {% if dose.url %}
             <a href="{{ dose.url }}">Read more</a>

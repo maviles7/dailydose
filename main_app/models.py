@@ -14,7 +14,7 @@ class NewsSource(models.Model):
 class Dose(models.Model):
     title = models.CharField(max_length=500)
     category = models.CharField(max_length=255, null=True, blank=True)
-    content = models.TextField(null=True, blank=True)
+    content = models.TextField(max_length=10000,null=True, blank=True)
     description = models.TextField(max_length=500)
     url = models.URLField()
     image = models.URLField(null=True, blank=True)

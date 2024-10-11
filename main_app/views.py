@@ -33,7 +33,7 @@ class SignUpView(CreateView):
             login(self.request, user)
         return response
 
-# @shared_task
+
 def fetch_doses():
     api_key = os.environ.get("API_KEY")
     if not api_key:

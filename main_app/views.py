@@ -4,10 +4,34 @@ from django.shortcuts import render, redirect
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from django.contrib.auth import authenticate, login
+# from django.http import HttpResponseRedirect
 from .models import NewsSource, Dose, FavoriteDose, BookmarkDose, Comment
 from .forms import CommentForm, EditCommentForm
 
 BASE_URL = 'https://gnews.io/api/v4/top-headlines?max=10&country=us&'
+
+# Create your views here.
+class Home(LoginView):
+    template_name = "home.html"
+
+
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'registration/signup.html'
+    success_url = reverse_lazy('dose-index')  # Redirect to the index page after sign-up
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(self.request, user)
+        return response
 
 # @shared_task
 def fetch_doses():
@@ -50,11 +74,6 @@ def fetch_doses():
     except Exception as e:
         print(f"Error fetching doses: {e}")
         print(response.content)  # Debugging: Print the response content
-
-
-# Create your views here.
-class Home(LoginView):
-    template_name = "home.html"
 
 
 def dose_list(request):
@@ -233,7 +252,3 @@ def delete_comment(request, dose_id, comment_id):
 
     return redirect('dose-detail', dose_id=dose_id)
 
-
-# refactor to class based view --> create a model, create a form, create a view, create template, map URL
-def upload(request):
-    return render(request, "main_app/upload_form.html")

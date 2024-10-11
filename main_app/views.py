@@ -12,7 +12,7 @@ from django.contrib.auth import authenticate, login
 from .models import NewsSource, Dose, FavoriteDose, BookmarkDose, Comment
 from .forms import CommentForm, EditCommentForm
 
-BASE_URL = "https://api.thenewsapi.com/v1/news/top?"
+BASE_URL = 'https://gnews.io/api/v4/top-headlines?max=10&country=us&'
 
 # Create your views here.
 class Home(LoginView):
@@ -35,55 +35,50 @@ class SignUpView(CreateView):
 
 
 def fetch_doses():
-    url = f'{BASE_URL}api_token={os.environ["API_KEY"]}'
-    response = requests.get(url)
+    api_key = os.environ.get("API_KEY")
+    if not api_key:
+        print("API_KEY is not set in the environment variables.")
+        return
 
-    # Check if the request was successful
-    if response.status_code == 200:
-        data = response.json()
-        print(data)  # Debug: print the full response to check its structure
+    url = f'{BASE_URL}apikey={api_key}'
+    print(f"Request URL: {url}")  # Debugging: Print the URL
+    response = ''
 
-        doses = data.get("data", [])
+    try:
+        response = requests.get(url)
+        print(f"Response Status Code: {response.status_code}")  # Debugging: Print the status code
 
-        if isinstance(doses, list):  # Ensure doses is a list
-            for dose in doses:
-                if isinstance(dose, dict):  # Ensure dose is a dictionary
-                    # Adjusted to reflect the response structure
-                    source_name = dose["source"]  # Source is now a string
+        if response.status_code == 200:
+            data = response.json()
+            doses = data.get('articles', [])  # Adjusted to reflect the response structure
+            print('This is what the doses object looks like:', doses)
 
-                    # Get or create the source (assuming you want to keep track of sources)
-                    source, created = NewsSource.objects.get_or_create(
-                        name=source_name,
-                    )
+            for dose_data in doses:
+                source_name = dose_data['source']['name']
+                source, created = NewsSource.objects.get_or_create(name=source_name)
 
-                    Dose.objects.create(
-                        source=source,
-                        author=dose.get(
-                            "author"
-                        ),  # 'author' may not be in the response; handle accordingly
-                        title=dose.get("title"),
-                        description=dose.get("description"),
-                        url=dose.get("url"),
-                        url_to_image=dose.get("image_url"),
-                        published_at=parse_datetime(dose["published_at"]),
-                        content=dose.get("snippet"),  # Using snippet as content
-                        category=(
-                            dose["categories"][0]
-                            if dose.get("categories")
-                            else "general"
-                        ),  # Get the first category or default
-                    )
-                else:
-                    print(f"Unexpected dose format: {dose}")  # Log unexpected formats
+                Dose.objects.update_or_create(
+                    title=dose_data['title'],
+                    defaults={
+                        'description': dose_data['description'],
+                        'url': dose_data['url'],
+                        'image': dose_data.get('image', ''),
+                        'published_at': dose_data['publishedAt'],
+                        'source': source
+                    }
+                )
+            print("Doses fetched and saved successfully.")
         else:
-            print("Doses is not a list.")
-    else:
-        print(f"Error fetching doses: {response.status_code} - {response.text}")
+            print(f"Failed to fetch doses: {response.status_code}")
+            print(f"Response Content: {response.content}")  # Debugging: Print the response content
+    except Exception as e:
+        print(f"Error fetching doses: {e}")
+        print(response.content)  # Debugging: Print the response content
 
 
 def dose_list(request):
-    # fetch_doses() // try this again tomorrow to test if new top articles are fetched
-    doses = Dose.objects.all()[:3]
+    fetch_doses()
+    doses = Dose.objects.all()
     print(doses)
     return render(request, "doses/index.html", {"doses": doses})
 

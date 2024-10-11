@@ -64,6 +64,9 @@ def fetch_doses():
 
                 # Check if the dose (dose) already exists based on the URL
                 if not Dose.objects.filter(url=dose['url']).exists():
+
+                    print('length of content:', len(dose.get('content', '')))
+
                     # Save the dose to the database
                     Dose.objects.create(
                         title=dose['title'],
@@ -71,7 +74,7 @@ def fetch_doses():
                         content=dose.get('content'),
                         description=dose['description'],
                         url=dose['url'],
-                        image=dose.get('image'),
+                        image=dose['image'],
                         published_at=published_at,
                         source=source,
                     )
@@ -100,6 +103,8 @@ def dose_detail(request, dose_id):
         dose = Dose.objects.get(id=dose_id)
     except Dose.DoesNotExist:
         return redirect('dose-detail')  # Redirect if the dose does not exist
+
+    print('image:', dose.image)
 
     comments = dose.comments.all()
     form = CommentForm()

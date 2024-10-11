@@ -16,8 +16,8 @@ class Dose(models.Model):
     category = models.CharField(max_length=255, null=True, blank=True)
     content = models.TextField(max_length=10000,null=True, blank=True)
     description = models.TextField(max_length=500)
-    url = models.URLField()
-    image = models.URLField(null=True, blank=True)
+    url = models.URLField(max_length=1000)
+    image = models.URLField(max_length=1000, null=True, blank=True)
     published_at = models.DateTimeField()
     source = models.ForeignKey(NewsSource, on_delete=models.CASCADE)
     user = models.ForeignKey(

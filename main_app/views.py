@@ -77,10 +77,10 @@ def fetch_doses(request):
         print(response.content)  # Debugging: Print the response content
 
     # Retrieve the saved doses from the database
-    doses = Dose.objects.all()
+    saved_doses = Dose.objects.all()
 
     # Render the template with the doses
-    return render(request, 'doses/index.html', {'doses': doses})
+    return render(request, 'doses/index.html', {'doses': saved_doses})
 
 def dose_list(request):
     fetch_doses(request)

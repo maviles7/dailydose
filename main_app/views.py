@@ -4,56 +4,13 @@ from django.shortcuts import render, redirect
 from django.utils.dateparse import parse_datetime
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-from .models import NewsSource, Dose, FavoriteDose, BookmarkDose
-
-BASE_URL = "https://api.thenewsapi.com/v1/news/top?"
-
-
-def fetch_doses():
-    url = f'{BASE_URL}api_token={os.environ["API_KEY"]}'
-    response = requests.get(url)
-
-    # Check if the request was successful
-    if response.status_code == 200:
-        data = response.json()
-        print(data)  # Debug: print the full response to check its structure
-
-        doses = data.get("data", [])
-
-        if isinstance(doses, list):  # Ensure doses is a list
-            for dose in doses:
-                if isinstance(dose, dict):  # Ensure dose is a dictionary
-                    # Adjusted to reflect the response structure
-                    source_name = dose["source"]  # Source is now a string
-
-                    # Get or create the source (assuming you want to keep track of sources)
-                    source, created = NewsSource.objects.get_or_create(
-                        name=source_name,
-                    )
-
-                    Dose.objects.create(
-                        source=source,
-                        author=dose.get(
-                            "author"
-                        ),  # 'author' may not be in the response; handle accordingly
-                        title=dose.get("title"),
-                        description=dose.get("description"),
-                        url=dose.get("url"),
-                        url_to_image=dose.get("image_url"),
-                        published_at=parse_datetime(dose["published_at"]),
-                        content=dose.get("snippet"),  # Using snippet as content
-                        category=(
-                            dose["categories"][0]
-                            if dose.get("categories")
-                            else "general"
-                        ),  # Get the first category or default
-                    )
-                else:
-                    print(f"Unexpected dose format: {dose}")  # Log unexpected formats
-        else:
-            print("Doses is not a list.")
-    else:
-        print(f"Error fetching doses: {response.status_code} - {response.text}")
+from django.contrib.auth.forms import UserCreationForm
+from django.views.generic.edit import CreateView
+from django.urls import reverse_lazy
+from django.contrib.auth import authenticate, login
+# from django.http import HttpResponseRedirect
+from .models import NewsSource, Dose, FavoriteDose, BookmarkDose, Comment
+from .forms import CommentForm, EditCommentForm
 
 
 # Create your views here.
@@ -61,17 +18,114 @@ class Home(LoginView):
     template_name = "home.html"
 
 
+class SignUpView(CreateView):
+    form_class = UserCreationForm
+    template_name = 'registration/signup.html'
+    success_url = reverse_lazy('dose-index')  # Redirect to the index page after sign-up
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(self.request, user)
+        return response
+
+
+BASE_URL = "https://gnews.io/api/v4/top-headlines?"
+
+def fetch_doses():
+    api_key = os.environ.get("API_KEY")
+    if not api_key:
+        print("API_KEY is not set in the environment variables.")
+        return []
+
+    # Fetch doses with expanded content, limited to 5
+    url = f'{BASE_URL}apikey={api_key}&lang=en&expand=content'
+    print(f"Request URL: {url}")  # Debugging: Print the URL
+    
+    try:
+        response = requests.get(url)
+        print(f"Response Status Code: {response.status_code}")  # Debugging: Print the status code
+
+        if response.status_code == 200:
+            data = response.json()
+            doses = data.get('articles', [])[:5]  # Get the first 5 articles
+
+            # Iterate through the fetched articles and save them to the database
+            for dose in doses:
+                # Get or create the NewsSource object
+                source_name = dose['source']['name']
+                source, created = NewsSource.objects.get_or_create(name=source_name)
+
+                # Parse the published_at field to match DateTimeField
+                published_at = parse_datetime(dose['publishedAt'])
+
+                # Check if the dose (dose) already exists based on the URL
+                if not Dose.objects.filter(url=dose['url']).exists():
+
+                    print('length of content:', len(dose.get('content', '')))
+
+                    # Save the dose to the database
+                    Dose.objects.create(
+                        title=dose['title'],
+                        category=dose.get('category'),  # Assuming category is available
+                        content=dose.get('content'),
+                        description=dose['description'],
+                        url=dose['url'],
+                        image=dose['image'],
+                        published_at=published_at,
+                        source=source,
+                    )
+            return doses  # Optionally return the doses, though not necessary here
+        else:
+            print(f"Failed to fetch doses: {response.status_code}")
+            return []
+    except Exception as e:
+        print(f"Error fetching doses: {e}")
+        return []
+
+
 def dose_list(request):
-    # fetch_doses() // try this again tomorrow to test if new top articles are fetched
-    doses = Dose.objects.all()[:3]
-    print(doses)
-    return render(request, "doses/index.html", {"doses": doses})
+    # Fetch and save doses from the API
+    fetch_doses()
+
+    # Retrieve the saved doses from the database
+    doses = Dose.objects.all()
+
+    # Pass the doses to the template for rendering
+    return render(request, 'doses/index.html', {'doses': doses})
 
 
 def dose_detail(request, dose_id):
-    dose = Dose.objects.get(id=dose_id)
-    print(dose)
-    return render(request, "doses/detail.html", {"dose": dose})
+    try:
+        dose = Dose.objects.get(id=dose_id)
+    except Dose.DoesNotExist:
+        return redirect('dose-detail')  # Redirect if the dose does not exist
+
+    print('image:', dose.image)
+
+    comments = dose.comments.all()
+    form = CommentForm()
+
+    if request.method == 'POST':
+        if not request.user.is_authenticated:
+            return redirect('login')  # Redirect to login if the user is not authenticated
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.dose = dose
+            comment.user = request.user
+            comment.save()
+            # Redirect to the same page to display the new comment
+            return redirect('dose-detail', dose_id=dose.id)
+
+    return render(request, 'doses/detail.html', {
+        'dose': dose,
+        'comments': comments,
+        'form': form,
+    })
 
 
 # @login_required
@@ -151,6 +205,67 @@ def unfavorite_dose(request, dose_id):
 
     return redirect('favorite-doses-index')
 
-# refactor to class based view --> create a model, create a form, create a view, create template, map URL
-def upload(request):
-    return render(request, "main_app/upload_form.html")
+# @login_required
+def add_comment(request, dose_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+    except Dose.DoesNotExist:
+        return redirect('dose-index')  # Redirect if the dose does not exist
+
+    user = request.user
+
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            text = form.cleaned_data['text']
+            Comment.objects.create(dose=dose, user=user, text=text)
+            return redirect('dose-detail', dose_id=dose_id)
+    else:
+        form = CommentForm()
+
+    return render(request, 'doses/detail.html', {
+        'dose': dose,
+        'comment_form': form
+    })
+
+
+def edit_comment(request, dose_id, comment_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+        comment = Comment.objects.get(id=comment_id, dose=dose)
+    except (Dose.DoesNotExist, Comment.DoesNotExist):
+        return redirect('dose-detail', dose_id=dose_id)  # Redirect if the dose or comment does not exist
+
+    if comment.user != request.user:
+        return redirect('dose-detail', dose_id=dose_id)  # Redirect if the user is not the author
+
+    if request.method == 'POST':
+        form = EditCommentForm(request.POST, instance=comment)
+        if form.is_valid():
+            form.save()
+            return redirect('dose-detail', dose_id=dose_id)
+    else:
+        form = EditCommentForm(instance=comment)
+
+    return render(request, 'doses/edit_comment.html', {
+        'dose': dose,
+        'comment': comment,
+        'form': form
+    })
+
+
+# @login_required
+def delete_comment(request, dose_id, comment_id):
+    try:
+        dose = Dose.objects.get(id=dose_id)
+        comment = Comment.objects.get(id=comment_id, dose=dose)
+    except (Dose.DoesNotExist, Comment.DoesNotExist):
+        return redirect('dose-detail', dose_id=dose_id)  # Redirect if the dose or comment does not exist
+
+    if comment.user != request.user:
+        return redirect('dose-detail', dose_id=dose_id)  # Redirect if the user is not the author
+
+    comment.delete()
+
+    return redirect('dose-detail', dose_id=dose_id)
+

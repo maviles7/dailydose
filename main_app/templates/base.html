@@ -19,7 +19,6 @@
             <li><a href="{% url 'dose-index' %}">Daily Doses</a></li>
             <li><a href="{% url 'favorite-doses-index' %}">Favorite Doses</a></li>
             <li><a href="{% url 'bookmark-dose-index' %}">Bookmarked Doses</a></li>
-            <li><a href="{% url 'upload' %}">Upload A Dose</a></li>
             <li>
               <form id="logout-form" method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
@@ -28,7 +27,7 @@
             </li>
           {% else %}
             <li><a href="{% url 'home' %}">Log In</a></li>
-            <li><a href="">Sign Up</a></li>
+            <li><a href="{% url 'signup' %}">Sign Up</a></li>
           {% endif %}
         </ul>
       </nav>

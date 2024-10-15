@@ -12,20 +12,20 @@
           {% if dose.title %}
             <h1>{{ dose.title }}</h1>
           {% endif %}
-          {% if dose.image %}
-            <img src="{{ dose.image }}" alt="{{ dose.title }}">
+          {% if dose.author %}
+            <p>Author: {{ dose.author }}</p>
           {% endif %}
           {% if dose.source.name %}
             <p>Source: {{ dose.source.name }}</p>
           {% endif %}
-          {% if dose.published_at %}
-            <p>Published: {{ dose.published_at }}</p>
+          {% if dose.published %}
+            <p>Published: {{ dose.published }}</p>
           {% endif %}
-          {% if dose.content %}
-            <p>{{ dose.content }}</p>
+          {% if dose.description %}
+            <p>Description: {{ dose.description }}</p>
           {% endif %}
           {% if dose.url %}
-            <a href="{{ dose.url }}">Source</a>
+            <a href="{{ dose.url }}">Read more</a>
           {% endif %}
           <form action="{% url 'bookmark-dose' dose.id %}" method="post">
             {% csrf_token %}
@@ -61,7 +61,7 @@
       {% endfor %}
     </ul>
   
-    <h2>Add a Comment</h2>
+    <h2>Edit Comment</h2>
     <form method="post">
       {% csrf_token %}
       {{ form.as_p }}

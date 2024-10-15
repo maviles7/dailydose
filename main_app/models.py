@@ -57,4 +57,4 @@ class Comment(models.Model):
         return f"Comment by {self.user.username} - {self.dose.title}"
 
     class Meta:
-        ordering = ["-created_at"]
+        ordering = ['-created_at']

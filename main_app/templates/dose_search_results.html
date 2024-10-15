@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Search Results for "{{ query }}"</h1>
+  <ul>
+    {% for dose in results %}
+      <a href='{% url 'dose-detail' dose.id %}'><li>{{ dose.title }}</li><a>
+    {% empty %}
+      <li>No results found.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

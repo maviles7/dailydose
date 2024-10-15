@@ -90,6 +90,14 @@ def fetch_doses():
     except Exception as e:
         print(f"Error fetching doses: {e}")
         return []
+    
+def dose_search(request):
+    query = request.GET.get('q')
+    if query:
+        results = Dose.objects.filter(title__icontains=query)  # Adjust the filter as needed
+    else:
+        results = Dose.objects.none()
+    return render(request, 'dose_search_results.html', {'results': results, 'query': query})
 
 
 def dose_list(request):

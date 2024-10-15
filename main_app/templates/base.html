@@ -16,6 +16,12 @@
       <nav>
         <ul>
           {% if user.is_authenticated %}
+            <li>
+              <form method="get" action="{% url 'dose-search' %}">
+                <input type="text" name="q" placeholder="Search doses..." />
+                <button type="submit">Search🔍</button>
+              </form>
+            </li>
             <li><a href="{% url 'dose-index' %}">Daily Doses💊</a></li>
             <li><a href="{% url 'favorite-doses-index' %}">Favorite Doses⭐</a></li>
             <li><a href="{% url 'bookmark-dose-index' %}">Bookmarked Doses🔖</a></li>

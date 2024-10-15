@@ -1,4 +1,4 @@
-nav {
+/* nav {
     margin: 0;
     padding: 0;
     width: 200px;
@@ -32,4 +32,143 @@ a {
 
 h1 {
     text-align: center;
-}
+} */
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: white;
+    color: #333;
+  }
+  
+  /* Fixed side navigation bar */
+  nav {
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: flex-start;
+    text-align: center;
+    height: 100%;
+    background-color: #ff7f11; /* Orange background for the nav bar */
+    overflow: auto;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  main {
+    margin-left: 200px;
+    padding: 1px 16px;
+    height: 1000px;
+  }
+  
+  /* Navigation Links */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    margin: 20px 0;
+  }
+  
+  a {
+    text-decoration: none;
+    color: #fff; /* White text for links */
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: color 0.3s ease;
+  }
+  
+  a:hover {
+    color: #333; /* Darker color on hover */
+  }
+  
+  /* Buttons and forms */
+  button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #ff7f11;
+    transform: scale(1.05);
+  }
+  
+  #logout-form {
+    display: inline-block;
+  }
+  
+  h1 {
+    text-align: center;
+    
+  }
+  
+  main {
+    padding: 20px;
+  }
+  
+  /* Animations */
+  @keyframes dose-glow {
+    0% {
+      box-shadow: 0 0 5px #ff7f11;
+    }
+    50% {
+      box-shadow: 0 0 20px #ff7f11;
+    }
+    100% {
+      box-shadow: 0 0 5px #ff7f11;
+    }
+  }
+  
+  /* Div hover effects */
+  div.box {
+    border: 2px solid #333;
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  div.box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    animation: dose-glow 1.5s infinite;
+  }
+  
+  /* Footer styling */
+  footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 40px;
+  }
+  
+  /* Responsive styling */
+  @media (max-width: 768px) {
+    nav {
+      width: 100%;
+      height: auto;
+      position: relative;
+    }
+  
+    main {
+      margin-left: 0;
+    }
+  
+    nav ul {
+      flex-direction: row;
+    }
+  
+    nav ul li {
+      margin: 0 10px;
+    }
+  }

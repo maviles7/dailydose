@@ -1,71 +1,79 @@
-{% extends 'base.html' %}
-{% load static %}
+{% extends 'base.html' %} {% load static %} {% block head %}
+<link rel="stylesheet" href="{% static 'css/base.css' %}" />
+{% endblock %} {% block content %}
+<div class="details-container">
+  <ul>
+    <li>
+      {% if dose.title %}
+      <h1>{{ dose.title }}</h1>
+      {% endif %} {% if dose.image %}
+      <img src="{{ dose.image }}" alt="{{ dose.title }}" />
+      {% endif %} {% if dose.source.name %}
+      <p>Source: {{ dose.source.name }}</p>
+      {% endif %} {% if dose.published_at %}
+      <p>Published: {{ dose.published_at }}</p>
+      {% endif %} {% if dose.content %}
+      <p>{{ dose.content }}</p>
+      {% endif %} {% if dose.url %}
+      <a href="{{ dose.url }}">Source</a>
+      {% endif %}
 
-{% block head %}
-  <link rel="stylesheet" href="{% static 'css/base.css' %}">
-{% endblock %}
+      <!-- Conditionally render the bookmark forms -->
+      {% if is_bookmarked %}
+      <form action="{% url 'unbookmark-dose' dose.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Remove Bookmark</button>
+      </form>
+      {% else %}
+      <form action="{% url 'bookmark-dose' dose.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Bookmark this dose</button>
+      </form>
+      {% endif %}
 
-{% block content %}
-  <div class="details-container">
-    <ul>
-      <li>
-          {% if dose.title %}
-            <h1>{{ dose.title }}</h1>
-          {% endif %}
-          {% if dose.image %}
-            <img src="{{ dose.image }}" alt="{{ dose.title }}">
-          {% endif %}
-          {% if dose.source.name %}
-            <p>Source: {{ dose.source.name }}</p>
-          {% endif %}
-          {% if dose.published_at %}
-            <p>Published: {{ dose.published_at }}</p>
-          {% endif %}
-          {% if dose.content %}
-            <p>{{ dose.content }}</p>
-          {% endif %}
-          {% if dose.url %}
-            <a href="{{ dose.url }}">Source</a>
-          {% endif %}
-          <form action="{% url 'bookmark-dose' dose.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Bookmark this dose</button>
-          </form>
-          <form action="{% url 'unbookmark-dose' dose.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Remove Bookmark</button>
-          </form>
-          <form action="{% url 'favorite-dose' dose.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Favorite this dose</button>
-          </form>
-          <form action="{% url 'unfavorite-dose' dose.id %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Remove Favorite</button>
-          </form>
-        </li>
-    </ul>
-  </div>
-  <div class='comment-container'>
-    <h2>Comments</h2>
-    <ul>
-      {% for comment in comments %}
-        <li>{{ comment.user }}: {{ comment.text }} ({{ comment.created_at }})</li>
-        <form action="{% url 'edit-comment' dose.id comment.id %}" method="get" style="display:inline;">
-          <button type="submit">Edit</button>
-        </form>
-        <form action="{% url 'delete-comment' dose.id comment.id %}" method="post" style="display:inline;">
-          {% csrf_token %}
-          <button type="submit">Delete</button>
-        </form>
-      {% endfor %}
-    </ul>
-  
-    <h2>Add a Comment</h2>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Submit</button>
+      <!-- Conditionally render the favorite forms -->
+      {% if is_favorited %}
+      <form action="{% url 'unfavorite-dose' dose.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Remove from Favorites</button>
+      </form>
+      {% else %}
+      <form action="{% url 'favorite-dose' dose.id %}" method="post">
+        {% csrf_token %}
+        <button type="submit">Add to Favorites</button>
+      </form>
+      {% endif %}
+      
+    </li>
+  </ul>
+</div>
+<div class="comment-container">
+  <h2>Comments</h2>
+  <ul>
+    {% for comment in comments %}
+    <li>{{ comment.user }}: {{ comment.text }} ({{ comment.created_at }})</li>
+    <form
+      action="{% url 'edit-comment' dose.id comment.id %}"
+      method="get"
+      style="display: inline"
+    >
+      <button type="submit">Edit</button>
     </form>
-  </div>
+    <form
+      action="{% url 'delete-comment' dose.id comment.id %}"
+      method="post"
+      style="display: inline"
+    >
+      {% csrf_token %}
+      <button type="submit">Delete</button>
+    </form>
+    {% endfor %}
+  </ul>
+
+  <h2>Add a Comment</h2>
+  <form method="post">
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit">Submit</button>
+  </form>
+</div>
 {% endblock %}

@@ -15,7 +15,12 @@ from .forms import CommentForm, EditCommentForm
 
 # Create your views here.
 class Home(LoginView):
-    template_name = "home.html"
+     template_name = "home.html"
+     
+     def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect('dose-index')  # Redirect to the dose list view if the user is authenticated
+        return super().get(request, *args, **kwargs)
 
 
 class SignUpView(CreateView):
@@ -109,6 +114,12 @@ def dose_detail(request, dose_id):
     comments = dose.comments.all()
     form = CommentForm()
 
+    #Check to see if dose is bookmarked
+    is_bookmarked = BookmarkDose.objects.filter(user=request.user, dose=dose).exists()
+
+    # Check if the dose is favorited by the current user
+    is_favorited = FavoriteDose.objects.filter(user=request.user, dose=dose).exists()
+
     if request.method == 'POST':
         if not request.user.is_authenticated:
             return redirect('login')  # Redirect to login if the user is not authenticated
@@ -125,6 +136,8 @@ def dose_detail(request, dose_id):
         'dose': dose,
         'comments': comments,
         'form': form,
+        'is_bookmarked': is_bookmarked,  # Pass the bookmark status to the template
+        'is_favorited': is_favorited,    # Pass the favorite status to the template
     })
 
 

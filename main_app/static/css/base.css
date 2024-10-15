@@ -41,14 +41,14 @@ li {
 
 a {
   text-decoration: none;
-  color: #fff; /* White text for links */
+  color: black; /* White text for links */
   font-size: 1.2rem;
   font-weight: bold;
   transition: color 0.3s ease;
 }
 
 a:hover {
-  color: #333; /* Darker color on hover */
+  color: white; /* Darker color on hover */
 }
 
 /* Buttons and forms */
@@ -72,6 +72,7 @@ button:hover {
 
 h1 {
   text-align: center;
+  animation: dose-glow 1.5s infinite alternate;
 }
 
 main {
@@ -81,13 +82,13 @@ main {
 /* Animations */
 @keyframes dose-glow {
   0% {
-    box-shadow: 0 0 5px #ff7f11;
+    text-shadow: 0 0 5px #ff7f11;
   }
   50% {
-    box-shadow: 0 0 20px #ff7f11;
+    text-shadow: 0 0 20px black;
   }
   100% {
-    box-shadow: 0 0 5px #ff7f11;
+    text-shadow: 0 0 5px #ff7f11;
   }
 }
 
@@ -114,6 +115,67 @@ footer {
   padding: 15px 0;
   margin-top: 40px;
 }
+ 
+
+   /* card ui styling */
+
+   .card {
+    width: 190px;
+    background:  #ff7f11;
+    padding: .4em;
+    border-radius: 6px;
+  }
+  
+  .card-image {
+    background-color: rgb(236, 236, 236);
+    width: 100%;
+    height: 130px;
+    border-radius: 6px 6px 0 0;
+  }
+  
+  .card-image:hover {
+    transform: scale(0.98);
+  }
+  
+  .category {
+    text-transform: uppercase;
+    font-size: 0.7em;
+    font-weight: 600;
+    color: rgb(63, 121, 230);
+    padding: 10px 7px 0;
+  }
+  
+  .category:hover {
+    cursor: pointer;
+  }
+  
+  .heading {
+    font-weight: 600;
+    color:black;
+    padding: 7px;
+  }
+  
+  .heading:hover {
+    cursor: pointer;
+  }
+  
+  .author {
+    color: gray;
+    font-weight: 400;
+    font-size: 11px;
+    padding-top: 20px;
+  }
+  
+  .name {
+    font-weight: 600;
+  }
+  
+  .name:hover {
+    cursor: pointer;
+  }
+
+
+
 
 /* Responsive styling */
 @media (max-width: 768px) {

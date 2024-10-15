@@ -8,9 +8,10 @@
   <h1>Latest News</h1>
   <ul>
     {% for dose in doses %}
-      <li>
-        <img src="{{ dose.image }}" alt="{{ dose.title}}">
-        <a href='{% url 'dose-detail' dose.id %}'><h2>{{ dose.title }}</h2></a>
+      <li class="card">
+       
+        <img class="card-image" src="{{ dose.image }}" alt="{{ dose.title}}">
+        <a class="heading" href='{% url 'dose-detail' dose.id %}'><h2>{{ dose.title }}</h2></a>
         <p><strong>Source:</strong> {{ dose.source.name }}</p>
         <p><strong>Published At:</strong> {{ dose.published_at }}</p>
         <a href="{{ dose.url }}">Read more</a>

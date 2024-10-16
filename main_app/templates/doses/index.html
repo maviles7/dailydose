@@ -7,7 +7,6 @@
 {% block content %}
   <h1>Top Doses</h1>
 
-    <!-- Category Filter -->
     <form method="get" action="{% url 'dose-index' %}">
       <label for="category">Filter by category:</label>
       <select name="category" id="category" onchange="this.form.submit()">
@@ -23,16 +22,16 @@
       </select>
     </form>
 
-
-    <ul>
+    <ul class="card-container">
       {% for dose in doses %}
         <li class="card">
-        
-          <img class="card-image" src="{{ dose.image }}" alt="{{ dose.title}}">
-          <a class="heading" href='{% url 'dose-detail' dose.id %}'><h2>{{ dose.title }}</h2></a>
-          <p><strong>Source:</strong> {{ dose.source.name }}</p>
-          <p><strong>Published At:</strong> {{ dose.published_at }}</p>
-          <a href="{{ dose.url }}">Read more</a>
+          <a class="card-link" href='{% url 'dose-detail' dose.id %}'>
+            <img class="card-image" src="{{ dose.image }}" alt="{{ dose.title}}">
+            <h2 class="heading">{{ dose.title }}</h2>
+            <p><strong>Source:</strong> {{ dose.source.name }}</p>
+            <p><strong>Published At:</strong> {{ dose.published_at }}</p>
+            <p>Read more</p>
+          </a>
         </li>
       {% endfor %}
     </ul>

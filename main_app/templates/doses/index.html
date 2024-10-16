@@ -5,17 +5,35 @@
 
 
 {% block content %}
-  <h1>Latest News</h1>
-  <ul>
-    {% for dose in doses %}
-      <li class="card">
-       
-        <img class="card-image" src="{{ dose.image }}" alt="{{ dose.title}}">
-        <a class="heading" href='{% url 'dose-detail' dose.id %}'><h2>{{ dose.title }}</h2></a>
-        <p><strong>Source:</strong> {{ dose.source.name }}</p>
-        <p><strong>Published At:</strong> {{ dose.published_at }}</p>
-        <a href="{{ dose.url }}">Read more</a>
-      </li>
-    {% endfor %}
-  </ul>
+  <h1>Top Doses</h1>
+
+    <!-- Category Filter -->
+    <form method="get" action="{% url 'dose-index' %}">
+      <label for="category">Filter by category:</label>
+      <select name="category" id="category" onchange="this.form.submit()">
+        <option value="general" {% if selected_category == "general" %}selected{% endif %}>General</option>
+        <option value="world" {% if selected_category == "world" %}selected{% endif %}>World</option>
+        <option value="business" {% if selected_category == "business" %}selected{% endif %}>Business</option>
+        <option value="technology" {% if selected_category == "technology" %}selected{% endif %}>Technology</option>
+        <option value="sports" {% if selected_category == "sports" %}selected{% endif %}>Sports</option>
+        <option value="science" {% if selected_category == "science" %}selected{% endif %}>Science</option>
+        <option value="health" {% if selected_category == "health" %}selected{% endif %}>Health</option>
+        <option value="entertainment" {% if selected_category == "entertainment" %}selected{% endif %}>Entertainment</option>
+        <option value="nation" {% if selected_category == "nation" %}selected{% endif %}>Nation</option>
+      </select>
+    </form>
+
+
+    <ul>
+      {% for dose in doses %}
+        <li class="card">
+        
+          <img class="card-image" src="{{ dose.image }}" alt="{{ dose.title}}">
+          <a class="heading" href='{% url 'dose-detail' dose.id %}'><h2>{{ dose.title }}</h2></a>
+          <p><strong>Source:</strong> {{ dose.source.name }}</p>
+          <p><strong>Published At:</strong> {{ dose.published_at }}</p>
+          <a href="{{ dose.url }}">Read more</a>
+        </li>
+      {% endfor %}
+    </ul>
 {% endblock %}

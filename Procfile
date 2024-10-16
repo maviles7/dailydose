@@ -1,0 +1,1 @@
+web: gunicorn dailydose.wsgi

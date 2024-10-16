@@ -27,7 +27,7 @@
         <li class="card">
           <a class="card-link" href='{% url 'dose-detail' dose.id %}'>
             <img class="card-image" src="{{ dose.image }}" alt="{{ dose.title}}">
-            <h2 class="heading">{{ dose.title }}</h2>
+            <h2 class="heading"><strong>{{ dose.title }}</strong></h2>
             <p><strong>Source:</strong> {{ dose.source.name }}</p>
             <p><strong>Published At:</strong> {{ dose.published_at }}</p>
             <p>Read more</p>

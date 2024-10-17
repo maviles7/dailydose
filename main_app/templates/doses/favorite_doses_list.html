@@ -5,7 +5,7 @@
   <ul>
     {% for favorite in favorite_doses %}
       <li>
-        <a href="{% url 'dose-detail' favorite.dose.id %}"><h1>{{ favorite.dose.title }}</h1></a>
+        <a href="{% url 'dose-detail' favorite.dose.id %}"><h2>{{ favorite.dose.title }}</h2></a>
         <p>{{ favorite.dose.description }}</p>
       </li>
     {% endfor %}

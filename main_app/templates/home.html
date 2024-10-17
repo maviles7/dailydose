@@ -1,26 +1,28 @@
-{% extends "base.html" %}
-{% load static %} {% block head %}
+{% extends "base.html" %} {% load static %} {% block head %}
 <link rel="stylesheet" href="{% static 'css/base.css' %}" />
 {% endblock %} {% block content %}
 
-<div style="background-image: url('https://i.imgur.com/VzKFocE.jpeg');" class="home-container">
+<div
+  style="background-image: url('https://i.imgur.com/VzKFocE.jpeg')"
+  class="home-container"
+>
   <div class="clear-background">
-<div class="homepage-header">
-  <h1>Daily Dose</h1>
-<div>
-
-  {% comment %} {% if user.is_authenticated %} {% endcomment %}
-  <section>
-    <div class="home-button">
-    <form action="{% url 'home' %}" method="post" class="login">
-      <h1>Login</h1>
-      {% csrf_token %} {{ form.as_p }}
-      <input type="hidden" name="next" value="{{ next }}" />
-      <button type="submit" class="btn submit">Login</button>
-    </form>
+    <div class="homepage-header">
+      <h1>Daily Dose</h1>
+      <div>
+        {% comment %} {% if user.is_authenticated %} {% endcomment %}
+        <section>
+          <div class="home-button">
+            <form action="{% url 'home' %}" method="post" class="login">
+              <h1>Login</h1>
+              {% csrf_token %} {{ form.as_p }}
+              <input type="hidden" name="next" value="{{ next }}" />
+              <button type="submit" class="btn submit">Login</button>
+            </form>
+          </div>
+        </section>
+      </div>
+    </div>
   </div>
-  </section>
 </div>
-  </div>
-
 {% endblock %}

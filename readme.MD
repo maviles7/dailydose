@@ -9,14 +9,14 @@ We want to create an app that simplifies news digestion to help users avoid feel
 
 #Screenshot 
 
-![screenshot of Daily Dose]("blob:https://imgur.com/21c23857-3063-4c28-bace-a415b18cf063")
+![screenshot of Daily Dose](https://i.imgur.com/fN6FF4m.png)
 
 # Getting Started
 
 - [Planning](https://trello.com/b/Pib0DgZQ/daily-dose)
 - [Slide Deck](https://docs.google.com/presentation/d/1yz3IqKM6kp2C2Jro0vTILpfD_SOkSTotYfhWDYF7cyY/edit?usp=sharing)
 - [GitHub Repo](https://github.com/maviles7/dailydose)
-- [Daily Dose]("https://dailydose-f0c774bd923d.herokuapp.com/")
+- [Daily Dose](https://dailydose-f0c774bd923d.herokuapp.com/)
 
 # Technologies Used
 

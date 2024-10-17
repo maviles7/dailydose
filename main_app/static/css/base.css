@@ -1,16 +1,16 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Arial", sans-serif;
+  font-family: "MonospaceMedium", monospace;
   background-color: white;
   color: #333;
 }
 
 /* Fixed side navigation bar */
 nav {
-  margin: 0;
+  margin-right: 0;
   padding: 0;
-  width: 200px;
+  width: 225px;
   position: fixed;
   display: flex;
   flex-direction: column;
@@ -24,7 +24,7 @@ nav {
 }
 
 main {
-  margin-left: 200px;
+  margin-left: 225px;
   padding: 1px 16px;
   height: 1000px;
 }
@@ -37,6 +37,10 @@ ul {
 
 li {
   margin: 20px 0;
+  &:hover {
+    cursor: pointer;
+    font-weight: bold;
+  }
 }
 
 a {
@@ -66,6 +70,8 @@ button:hover {
 }
 
 h1 {
+  font-family: NewsflashBB;
+  font-size: 8vmin;
   text-align: center;
   animation: dose-glow 1.5s infinite alternate;
 }
@@ -187,14 +193,6 @@ body.dark-mode nav {
   background-color: #ff7f11;
 }
 
-body.dark-mode a {
-  color: #ffffff;
-}
-
-body.dark-mode a:hover {
-  color: #ff7f11;
-}
-
 body.dark-mode button {
   background-color: #ffffff;
   color: #333;
@@ -271,6 +269,50 @@ body.dark-mode footer {
   transform: translate(3px, 3px);
 }
 
+@font-face {
+  font-family: "NewsflashBB";
+  src: url("../fonts/NewsflashBB.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MonospaceMedium";
+  src: url("../fonts/monospace.medium.ttf") format("truetype");
+}
+
+/* From Uiverse.io by Bodyhc */ 
+.search {
+  display: inline-block;
+  position: relative;
+  padding-left: 2px;
+}
+
+.search input[type="text"] {
+  width: 200px;
+  padding: 10px;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.search button[type="submit"] {
+  background-color: black;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 0;
+  right: 0;
+  transition: .9s ease;
+}
+
+.search button[type="submit"]:hover {
+  transform: scale(1.1);
+  color: #ff7f11;
+}
+
 
 /* Responsive styling */
 @media (max-width: 768px) {
@@ -291,4 +333,4 @@ body.dark-mode footer {
   nav ul li {
     margin: 0 10px;
   }
-}
+} 

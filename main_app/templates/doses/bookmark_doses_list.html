@@ -5,7 +5,7 @@
   <ul>
     {% for bookmark in bookmarked_doses %}
       <li>
-        <a href="{% url 'dose-detail' bookmark.dose.id %}"><h1>{{ bookmark.dose.title }}</h1></a>
+        <a href="{% url 'dose-detail' bookmark.dose.id %}"><h2>{{ bookmark.dose.title }}</h2></a>
       </li>
     {% endfor %}
   </ul>

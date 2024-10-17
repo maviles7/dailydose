@@ -58,10 +58,12 @@ button {
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 0.75em;
 }
 
 button:hover {
-  background-color: #ff7f11;
+  background-color: white;
+  color: #333;
   transform: scale(1.05);
 }
 
@@ -321,6 +323,37 @@ body.dark-mode footer {
   align-content: center;
 }
 
+.details-buttons {
+  display: flex;
+  justify-content: flex-start;
+  align-content: left;
+  align-items: left;
+}
+
+.details-buttons > form {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.details-buttons > form > button:hover {
+  background-color: #ff7f11; /* Change background color on hover */
+  color: white;
+}
+
+.comment-buttons > form > button:hover {
+  background-color: #ff7f11; /* Change background color on hover */
+  color: white;
+}
+
+.add-comment-button > form > button:hover {
+  background-color: #ff7f11; /* Change background color on hover */
+  color: white;
+}
+
+.home-button > form > button:hover {
+  background-color: #ff7f11; /* Change background color on hover */
+  color: white;
+}
 
 /* Responsive styling */
 @media (max-width: 768px) {

@@ -10,12 +10,14 @@
 
   {% comment %} {% if user.is_authenticated %} {% endcomment %}
   <section>
+    <div class="home-button">
     <form action="{% url 'home' %}" method="post" class="login">
       <h1>Login</h1>
       {% csrf_token %} {{ form.as_p }}
       <input type="hidden" name="next" value="{{ next }}" />
       <button type="submit" class="btn submit">Login</button>
     </form>
+  </div>
   </section>
 
 {% endblock %}

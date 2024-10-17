@@ -18,6 +18,7 @@
       <a href="{{ dose.url }}">Source</a>
       {% endif %}
 
+      <div class="details-buttons">
       <!-- Conditionally render the bookmark forms -->
       {% if is_bookmarked %}
       <form action="{% url 'unbookmark-dose' dose.id %}" method="post">
@@ -43,7 +44,7 @@
         <button type="submit">Add to Favorites</button>
       </form>
       {% endif %}
-      
+    </div>
     </li>
   </ul>
 </div>
@@ -52,6 +53,7 @@
   <ul>
     {% for comment in comments %}
     <li>{{ comment.user }}: {{ comment.text }} ({{ comment.created_at }})</li>
+    <div class="comment-buttons">
     <form
       action="{% url 'edit-comment' dose.id comment.id %}"
       method="get"
@@ -67,13 +69,16 @@
       {% csrf_token %}
       <button type="submit">Delete</button>
     </form>
+  </div>
     {% endfor %}
   </ul>
 
   <h2>Add a Comment</h2>
+  <div class="add-comment-button">
   <form method="post">
     {% csrf_token %} {{ form.as_p }}
     <button type="submit">Submit</button>
   </form>
+  </div>
 </div>
 {% endblock %}

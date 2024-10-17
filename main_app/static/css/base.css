@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: "Arial", sans-serif;
+  font-family: "MonospaceMedium", monospace;
   background-color: white;
   color: #333;
 }
@@ -66,6 +66,8 @@ button:hover {
 }
 
 h1 {
+  font-family: NewsflashBB;
+  font-size: 8vmin;
   text-align: center;
   animation: dose-glow 1.5s infinite alternate;
 }
@@ -187,14 +189,6 @@ body.dark-mode nav {
   background-color: #ff7f11;
 }
 
-body.dark-mode a {
-  color: #ffffff;
-}
-
-body.dark-mode a:hover {
-  color: #ff7f11;
-}
-
 body.dark-mode button {
   background-color: #ffffff;
   color: #333;
@@ -271,6 +265,15 @@ body.dark-mode footer {
   transform: translate(3px, 3px);
 }
 
+@font-face {
+  font-family: "NewsflashBB";
+  src: url("../fonts/NewsflashBB.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "MonospaceMedium";
+  src: url("../fonts/monospace.medium.ttf") format("truetype");
+}
 
 /* Responsive styling */
 @media (max-width: 768px) {

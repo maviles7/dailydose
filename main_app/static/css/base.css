@@ -313,6 +313,14 @@ body.dark-mode footer {
   color: #ff7f11;
 }
 
+.homepage-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
 
 /* Responsive styling */
 @media (max-width: 768px) {

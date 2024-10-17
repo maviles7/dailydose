@@ -3,7 +3,10 @@
 <link rel="stylesheet" href="{% static 'css/base.css' %}" />
 {% endblock %} {% block content %}
 
-<h1>Home</h1>
+<div class="homepage-header">
+  <h1>Daily Dose</h1>
+  <h2>Your Daily News, Simplified</h2>
+<div>
 
   {% comment %} {% if user.is_authenticated %} {% endcomment %}
   <section>

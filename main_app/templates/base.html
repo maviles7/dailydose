@@ -99,8 +99,10 @@
             </form>
           </li>
           {% else %}
-          <li><a href="{% url 'home' %}">Log In😎</a></li>
-          <li><a href="{% url 'signup' %}">Sign Up👋</a></li>
+          <div class="log-in-out">
+            <li><a href="{% url 'home' %}">Log In😎</a></li>
+            <li><a href="{% url 'signup' %}">Sign Up👋</a></li>
+          </div>
           {% endif %}
         </ul>
       </nav>

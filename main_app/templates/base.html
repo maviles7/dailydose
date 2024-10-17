@@ -15,11 +15,25 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}" />
     <script defer>
       document.addEventListener("DOMContentLoaded", function () {
-        document
-          .getElementById("dark-mode-toggle")
-          .addEventListener("change", function () {
-            document.body.classList.toggle("dark-mode", this.checked);
-          });
+        const darkModeToggle = document.getElementById("dark-mode-toggle");
+    
+        // Load preference from local storage
+        const darkModePreference = localStorage.getItem("dark-mode");
+        if (darkModePreference === "enabled") {
+          document.body.classList.add("dark-mode");
+          darkModeToggle.checked = true;
+        }
+    
+        // Save preference to local storage
+        darkModeToggle.addEventListener("change", function () {
+          if (this.checked) {
+            document.body.classList.add("dark-mode");
+            localStorage.setItem("dark-mode", "enabled");
+          } else {
+            document.body.classList.remove("dark-mode");
+            localStorage.setItem("dark-mode", "disabled");
+          }
+        });
       });
     </script>
     <title>💊Daily Dose💊</title>

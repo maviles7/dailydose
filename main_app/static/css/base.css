@@ -355,6 +355,16 @@ body.dark-mode footer {
   color: white;
 }
 
+#detail-img {
+  width: 100%; /* Make the image span the full width of the page */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 0; /* Remove border radius for a banner look */
+  display: block; /* Ensure the image is displayed as a block element */
+  margin: 0 auto; /* Center the image horizontally */
+  position: relative; /* Ensure the image is positioned relative to the page */
+  top: 0; /* Position the image at the top */
+}
+
 /* Responsive styling */
 @media (max-width: 768px) {
   nav {

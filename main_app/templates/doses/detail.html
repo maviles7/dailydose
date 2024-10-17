@@ -6,9 +6,13 @@
     <li>
       {% if dose.title %}
       <h1>{{ dose.title }}</h1>
-      {% endif %} {% if dose.image %}
-      <img src="{{ dose.image }}" alt="{{ dose.title }}" />
-      {% endif %} {% if dose.source.name %}
+      {% endif %}
+      <div class="detail-img-container">
+        {% if dose.image %}
+        <img id="detail-img" src="{{ dose.image }}" alt="{{ dose.title }}" />
+        {% endif %}
+      </div>
+      {% if dose.source.name %}
       <p>Source: {{ dose.source.name }}</p>
       {% endif %} {% if dose.published_at %}
       <p>Published: {{ dose.published_at }}</p>
@@ -19,32 +23,32 @@
       {% endif %}
 
       <div class="details-buttons">
-      <!-- Conditionally render the bookmark forms -->
-      {% if is_bookmarked %}
-      <form action="{% url 'unbookmark-dose' dose.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Remove Bookmark</button>
-      </form>
-      {% else %}
-      <form action="{% url 'bookmark-dose' dose.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Bookmark this dose</button>
-      </form>
-      {% endif %}
+        <!-- Conditionally render the bookmark forms -->
+        {% if is_bookmarked %}
+        <form action="{% url 'unbookmark-dose' dose.id %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Remove Bookmark</button>
+        </form>
+        {% else %}
+        <form action="{% url 'bookmark-dose' dose.id %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Bookmark this dose</button>
+        </form>
+        {% endif %}
 
-      <!-- Conditionally render the favorite forms -->
-      {% if is_favorited %}
-      <form action="{% url 'unfavorite-dose' dose.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Remove from Favorites</button>
-      </form>
-      {% else %}
-      <form action="{% url 'favorite-dose' dose.id %}" method="post">
-        {% csrf_token %}
-        <button type="submit">Add to Favorites</button>
-      </form>
-      {% endif %}
-    </div>
+        <!-- Conditionally render the favorite forms -->
+        {% if is_favorited %}
+        <form action="{% url 'unfavorite-dose' dose.id %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Remove from Favorites</button>
+        </form>
+        {% else %}
+        <form action="{% url 'favorite-dose' dose.id %}" method="post">
+          {% csrf_token %}
+          <button type="submit">Add to Favorites</button>
+        </form>
+        {% endif %}
+      </div>
     </li>
   </ul>
 </div>
@@ -54,31 +58,31 @@
     {% for comment in comments %}
     <li>{{ comment.user }}: {{ comment.text }} ({{ comment.created_at }})</li>
     <div class="comment-buttons">
-    <form
-      action="{% url 'edit-comment' dose.id comment.id %}"
-      method="get"
-      style="display: inline"
-    >
-      <button type="submit">Edit</button>
-    </form>
-    <form
-      action="{% url 'delete-comment' dose.id comment.id %}"
-      method="post"
-      style="display: inline"
-    >
-      {% csrf_token %}
-      <button type="submit">Delete</button>
-    </form>
-  </div>
+      <form
+        action="{% url 'edit-comment' dose.id comment.id %}"
+        method="get"
+        style="display: inline"
+      >
+        <button type="submit">Edit</button>
+      </form>
+      <form
+        action="{% url 'delete-comment' dose.id comment.id %}"
+        method="post"
+        style="display: inline"
+      >
+        {% csrf_token %}
+        <button type="submit">Delete</button>
+      </form>
+    </div>
     {% endfor %}
   </ul>
 
   <h2>Add a Comment</h2>
   <div class="add-comment-button">
-  <form method="post">
-    {% csrf_token %} {{ form.as_p }}
-    <button type="submit">Submit</button>
-  </form>
+    <form method="post">
+      {% csrf_token %} {{ form.as_p }}
+      <button type="submit">Submit</button>
+    </form>
   </div>
 </div>
 {% endblock %}

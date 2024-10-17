@@ -57,6 +57,7 @@
   <ul>
     {% for comment in comments %}
     <li>{{ comment.user }}: {{ comment.text }} ({{ comment.created_at }})</li>
+    {% if comment.user == request.user %}
     <div class="comment-buttons">
       <form
         action="{% url 'edit-comment' dose.id comment.id %}"
@@ -74,6 +75,7 @@
         <button type="submit">Delete</button>
       </form>
     </div>
+    {% endif %}
     {% endfor %}
   </ul>
 

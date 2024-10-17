@@ -395,6 +395,15 @@ body.dark-mode h2 {
   top: 0; /* Position the image at the top */
 }
 
+.log-in-out {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  width: 220px;
+}
+
 /* Responsive styling */
 @media (max-width: 768px) {
   nav {

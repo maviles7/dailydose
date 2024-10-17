@@ -3,16 +3,21 @@
 <link rel="stylesheet" href="{% static 'css/base.css' %}" />
 {% endblock %} {% block content %}
 
-<h1>Home</h1>
+<div class="homepage-header">
+  <h1>Daily Dose</h1>
+  <h2>Your Daily News, Simplified</h2>
+<div>
 
   {% comment %} {% if user.is_authenticated %} {% endcomment %}
   <section>
+    <div class="home-button">
     <form action="{% url 'home' %}" method="post" class="login">
       <h1>Login</h1>
       {% csrf_token %} {{ form.as_p }}
       <input type="hidden" name="next" value="{{ next }}" />
       <button type="submit" class="btn submit">Login</button>
     </form>
+  </div>
   </section>
 
 {% endblock %}

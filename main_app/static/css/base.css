@@ -58,10 +58,12 @@ button {
   padding: 10px 20px;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 0.75em;
 }
 
 button:hover {
-  background-color: #ff7f11;
+  background-color: white;
+  color: #333;
   transform: scale(1.05);
 }
 
@@ -313,6 +315,55 @@ body.dark-mode footer {
   color: #ff7f11;
 }
 
+.homepage-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.details-buttons {
+  display: flex;
+  justify-content: flex-start;
+  align-content: left;
+  align-items: left;
+}
+
+.details-buttons > form {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.details-buttons > form > button:hover {
+  background-color: #ff7f11; /* Change background color on hover */
+  color: white;
+}
+
+.comment-buttons > form > button:hover {
+  background-color: #ff7f11; /* Change background color on hover */
+  color: white;
+}
+
+.add-comment-button > form > button:hover {
+  background-color: #ff7f11; /* Change background color on hover */
+  color: white;
+}
+
+.home-button > form > button:hover {
+  background-color: #ff7f11; /* Change background color on hover */
+  color: white;
+}
+
+#detail-img {
+  width: 100%; /* Make the image span the full width of the page */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 0; /* Remove border radius for a banner look */
+  display: block; /* Ensure the image is displayed as a block element */
+  margin: 0 auto; /* Center the image horizontally */
+  position: relative; /* Ensure the image is positioned relative to the page */
+  top: 0; /* Position the image at the top */
+}
 
 /* Responsive styling */
 @media (max-width: 768px) {
